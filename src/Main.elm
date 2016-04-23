@@ -4,23 +4,15 @@ import Signal
 import Html exposing (Html)
 import StartApp.Simple as StartApp
 import Html.Attributes as Attributes
+import Player.Views exposing (playerView)
 import Html.Events exposing (onClick, on, targetValue)
+import Player.Models exposing (PlayerModel, PlayerId, newPlayer)
 
 
 type alias Model =
-  { players : List Player
+  { players : List PlayerModel
   , field : String
   }
-
-
-type alias Player =
-  { name : String
-  , id : PlayerId
-  }
-
-
-type alias PlayerId =
-  Int
 
 
 type Action
@@ -50,16 +42,9 @@ update action model =
       }
 
 
-newId : List Player -> PlayerId
+newId : List PlayerModel -> PlayerId
 newId players =
   (Maybe.withDefault 0 (List.maximum (List.map (\player -> player.id) players))) + 1
-
-
-newPlayer : PlayerId -> String -> Player
-newPlayer id name =
-  { name = name
-  , id = id
-  }
 
 
 view : Signal.Address Action -> Model -> Html
@@ -81,12 +66,7 @@ view address model =
         [ Html.text "reset" ]
     , Html.ul
         []
-        (List.map
-          (\player ->
-            Html.li [] [ Html.text (player.name ++ " (" ++ toString player.id ++ ")") ]
-          )
-          model.players
-        )
+        (List.map playerView model.players)
     ]
 
 
