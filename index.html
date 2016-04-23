@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Tom's Retrospective Game</title>
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+    <div id="elm-mount-point"></div>
+
+    <script src="build/main.js"></script>
+    <script>
+      var mountPoint = document.getElementById('elm-mount-point')
+      Elm.embed(Elm.Main, mountPoint)
+    </script>
+  </body>
+</html>
