@@ -15,7 +15,12 @@ type alias Model =
 
 type alias Player =
   { name : String
+  , id : PlayerId
   }
+
+
+type alias PlayerId =
+  Int
 
 
 type Action
@@ -34,7 +39,7 @@ update action model =
       if model.field /= "" then
         { model
           | field = ""
-          , players = model.players ++ [ newPlayer model.field ]
+          , players = model.players ++ [ newPlayer (newId model.players) model.field ]
         }
       else
         model
@@ -45,9 +50,15 @@ update action model =
       }
 
 
-newPlayer : String -> Player
-newPlayer name =
+newId : List Player -> PlayerId
+newId players =
+  (Maybe.withDefault 0 (List.maximum (List.map (\player -> player.id) players))) + 1
+
+
+newPlayer : PlayerId -> String -> Player
+newPlayer id name =
   { name = name
+  , id = id
   }
 
 
@@ -72,7 +83,7 @@ view address model =
         []
         (List.map
           (\player ->
-            Html.li [] [ Html.text player.name ]
+            Html.li [] [ Html.text (player.name ++ " (" ++ toString player.id ++ ")") ]
           )
           model.players
         )
