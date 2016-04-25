@@ -1,26 +1,16 @@
-module Card.Models (CardModel, CardId, randomCard) where
+module Card.Models (randomCard) where
 
 
-type alias CardModel =
-  { text : String
-  , id : CardId
-  }
-
-
-type alias CardId =
-  Int
-
-
-cards : List CardModel
+cards : List String
 cards =
-  [ { text = "hello", id = 1 }
-  , { text = "hi", id = 2 }
-  , { text = "hey", id = 3 }
-  , { text = "howdy", id = 4 }
+  [ "hello"
+  , "hi"
+  , "hey"
+  , "howdy"
   ]
 
 
-randomCard : CardModel
+randomCard : String
 randomCard =
   List.head cards
-    |> Maybe.withDefault { text = "no", id = 0 }
+    |> Maybe.withDefault ""

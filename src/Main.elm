@@ -1,10 +1,10 @@
 module Main (..) where
 
 import Signal
+import Card.Models
 import Html exposing (Html)
 import StartApp.Simple as StartApp
 import Html.Attributes as Attributes
-import Card.Models exposing (CardModel)
 import Player.Views exposing (playerView)
 import Html.Events exposing (onClick, on, targetValue)
 import Player.Models exposing (PlayerModel, PlayerId, newPlayer)
@@ -13,7 +13,7 @@ import Player.Models exposing (PlayerModel, PlayerId, newPlayer)
 type alias Model =
   { players : List PlayerModel
   , field : String
-  , card : CardModel
+  , card : String
   }
 
 
@@ -21,7 +21,7 @@ type Action
   = Reset
   | AddNewPlayer
   | FieldChange String
-  | DrawCard CardModel
+  | DrawCard String
 
 
 update : Action -> Model -> Model
@@ -84,7 +84,7 @@ view address model =
         (List.map playerView model.players)
     , Html.h2
         []
-        [ Html.text model.card.text ]
+        [ Html.text model.card ]
     ]
 
 
@@ -92,10 +92,7 @@ initialModel : Model
 initialModel =
   { players = []
   , field = ""
-  , card =
-      { text = ""
-      , id = 0
-      }
+  , card = ""
   }
 
 
