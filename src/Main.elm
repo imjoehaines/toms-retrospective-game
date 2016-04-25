@@ -12,6 +12,7 @@ import Player.Models exposing (PlayerModel, PlayerId, newPlayer)
 type alias Model =
   { players : List PlayerModel
   , field : String
+  , card : String
   }
 
 
@@ -19,6 +20,18 @@ type Action
   = Reset
   | AddNewPlayer
   | FieldChange String
+  | DrawCard ( Card, String )
+
+
+type Card
+  = ScrumCard
+  | TrapCard
+  | TheOtherKindOfCardThatICantRememberRightNow
+
+
+randomCard : ( Card, String )
+randomCard =
+  ( ScrumCard, "hi" )
 
 
 update : Action -> Model -> Model
@@ -41,10 +54,21 @@ update action model =
         | field = value
       }
 
+    DrawCard ( card, cardText ) ->
+      { model
+        | card = cardText
+      }
+
 
 newId : List PlayerModel -> PlayerId
 newId players =
-  (Maybe.withDefault 0 (List.maximum (List.map (\player -> player.id) players))) + 1
+  let
+    playerIds =
+      List.map (\player -> player.id) players
+  in
+    List.maximum playerIds
+      |> Maybe.withDefault 0
+      |> (+) 1
 
 
 view : Signal.Address Action -> Model -> Html
@@ -57,16 +81,20 @@ view address model =
         ]
         []
     , Html.button
-        [ onClick address AddNewPlayer
-        ]
+        [ onClick address AddNewPlayer ]
         [ Html.text "add user" ]
     , Html.button
-        [ onClick address Reset
-        ]
+        [ onClick address (DrawCard randomCard) ]
+        [ Html.text "draw card" ]
+    , Html.button
+        [ onClick address Reset ]
         [ Html.text "reset" ]
     , Html.ul
         []
         (List.map playerView model.players)
+    , Html.h2
+        []
+        [ Html.text model.card ]
     ]
 
 
@@ -74,6 +102,7 @@ initialModel : Model
 initialModel =
   { players = []
   , field = ""
+  , card = ""
   }
 
 
