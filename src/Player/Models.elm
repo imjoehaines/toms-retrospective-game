@@ -11,8 +11,19 @@ type alias PlayerId =
   Int
 
 
-newPlayer : PlayerId -> String -> PlayerModel
-newPlayer id name =
+newPlayer : List PlayerModel -> String -> PlayerModel
+newPlayer players name =
   { name = name
-  , id = id
+  , id = newId players
   }
+
+
+newId : List PlayerModel -> PlayerId
+newId players =
+  let
+    playerIds =
+      List.map (\player -> player.id) players
+  in
+    List.maximum playerIds
+      |> Maybe.withDefault 0
+      |> (+) 1

@@ -34,7 +34,7 @@ update action model =
       if model.field /= "" then
         { model
           | field = ""
-          , players = model.players ++ [ newPlayer (newId model.players) model.field ]
+          , players = model.players ++ [ newPlayer model.players model.field ]
         }
       else
         model
@@ -48,17 +48,6 @@ update action model =
       { model
         | card = card
       }
-
-
-newId : List PlayerModel -> PlayerId
-newId players =
-  let
-    playerIds =
-      List.map (\player -> player.id) players
-  in
-    List.maximum playerIds
-      |> Maybe.withDefault 0
-      |> (+) 1
 
 
 view : Signal.Address Action -> Model -> Html
