@@ -4,6 +4,7 @@ import Signal
 import Html exposing (Html)
 import StartApp.Simple as StartApp
 import Html.Attributes as Attributes
+import Card.Models exposing (CardModel)
 import Player.Views exposing (playerView)
 import Html.Events exposing (onClick, on, targetValue)
 import Player.Models exposing (PlayerModel, PlayerId, newPlayer)
@@ -12,7 +13,7 @@ import Player.Models exposing (PlayerModel, PlayerId, newPlayer)
 type alias Model =
   { players : List PlayerModel
   , field : String
-  , card : String
+  , card : CardModel
   }
 
 
@@ -20,18 +21,7 @@ type Action
   = Reset
   | AddNewPlayer
   | FieldChange String
-  | DrawCard ( Card, String )
-
-
-type Card
-  = ScrumCard
-  | TrapCard
-  | TheOtherKindOfCardThatICantRememberRightNow
-
-
-randomCard : ( Card, String )
-randomCard =
-  ( ScrumCard, "hi" )
+  | DrawCard CardModel
 
 
 update : Action -> Model -> Model
@@ -54,9 +44,9 @@ update action model =
         | field = value
       }
 
-    DrawCard ( card, cardText ) ->
+    DrawCard card ->
       { model
-        | card = cardText
+        | card = card
       }
 
 
@@ -84,7 +74,7 @@ view address model =
         [ onClick address AddNewPlayer ]
         [ Html.text "add user" ]
     , Html.button
-        [ onClick address (DrawCard randomCard) ]
+        [ onClick address (DrawCard Card.Models.randomCard) ]
         [ Html.text "draw card" ]
     , Html.button
         [ onClick address Reset ]
@@ -94,7 +84,7 @@ view address model =
         (List.map playerView model.players)
     , Html.h2
         []
-        [ Html.text model.card ]
+        [ Html.text model.card.text ]
     ]
 
 
@@ -102,7 +92,10 @@ initialModel : Model
 initialModel =
   { players = []
   , field = ""
-  , card = ""
+  , card =
+      { text = ""
+      , id = 0
+      }
   }
 
 
